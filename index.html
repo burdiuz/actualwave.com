@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>actualwave.com</title>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+        }
+
+        .card, .card::after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16em;
+            height: 10em;
+            padding: 2em;
+            border-radius: 0.7em;
+            transform-style: preserve-3d;
+            transform: translate3d(-50%, -50%, 1px);
+        }
+
+        @media only screen and (min-width: 1280px) {
+            body {
+                font-size: 20px;
+            }
+        }
+
+        .card {
+            backface-visibility: hidden;
+            border: 1px solid #eee;
+            transition: transform 2s, easeOutQuad;
+        }
+
+        .card::after {
+            content: '';
+            pointer-events: none;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.33);
+        }
+
+        .flipped {
+            transform: translate3d(-50%, -50%, 0) rotate3d(0, 1, 0, 0.5turn);
+        }
+
+        .card.flipped::after {
+            transition: opacity 1s, easeOutCubic;
+            opacity: 0;
+        }
+
+        .card:not(.flipped)::after {
+            opacity: 1;
+            transition: opacity 1s, easeInCubic;
+        }
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            font-size: 1em;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .card-content h1 {
+            font-size: 2em;
+            margin-top: 0;
+        }
+
+        .card-content .about, .card-content .links {
+            margin-left: 2em;
+        }
+
+        .card-content a {
+            cursor: pointer;
+            margin-right: 1em;
+        }
+    </style>
+</head>
+<body>
+<div class="card front">
+    <div class="card-content">
+        <h1>Oleg Galaburda</h1>
+        <span class="about">
+            Software Engineer
+        </span>
+    </div>
+</div>
+<div class="card back flipped">
+    <div class="card-content">
+        <h1>Oleg Galaburda</h1>
+        <span class="links">
+            <a href="https://github.com/burdiuz">GitHub</a>
+            <a href="https://www.linkedin.com/in/clickbait/">LinkedIn</a>
+        </span>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+  const addClassName = (element, className) => {
+    element.className = `${element.className} ${className}`;
+  };
+
+  const removeClassName = (element, className) => {
+    element.className = element.className
+      .split(' ')
+      .filter(name => name !== className)
+      .join(' ');
+  };
+
+  const hasClassName = (element, className) =>
+    !!element.className.match(new RegExp(`(\\s|^)${className}(\\s|$)`));
+
+  const FLIPPED = 'flipped';
+
+  const getFront = () => document.querySelector('div.card.front');
+
+  const getBack = () => document.querySelector('div.card.back');
+
+  const isFrontVisible = () => !hasClassName(getFront(), FLIPPED);
+
+  const flipToFront = () => {
+    addClassName(getBack(), FLIPPED);
+    removeClassName(getFront(), FLIPPED);
+  };
+
+  const flipToBack = () => {
+    addClassName(getFront(), FLIPPED);
+    removeClassName(getBack(), FLIPPED);
+  };
+
+  const flipCard = () => {
+    if (isFrontVisible()) {
+      flipToBack();
+    } else {
+      flipToFront();
+    }
+  };
+
+  const handleFlipCard = (event) => {
+    if (event.target.nodeName.toLowerCase() !== 'a') {
+      event.preventDefault();
+      flipCard();
+    }
+  };
+
+  getFront().addEventListener('click', handleFlipCard);
+  getBack().addEventListener('click', handleFlipCard);
+</script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</html>
