@@ -57,14 +57,15 @@
             -moz-box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.33);
         }
 
-        .flipped {
+        #rotor:not(:checked) ~ .back, #rotor:checked ~ .front {
             transform: translate3d(-50%, -50%, 0) rotate3d(0, 1, 0, 0.5turn);
             -webkit-transform: translate3d(-50%, -50%, 0) rotate3d(0, 1, 0, 0.5turn);
             -ms-transform: translate3d(-50%, -50%, 0) rotate3d(0, 1, 0, 0.5turn);
             -moz-transform: translate3d(-50%, -50%, 0) rotate3d(0, 1, 0, 0.5turn);
         }
 
-        .card.flipped::after {
+        #rotor:not(:checked) ~ .back::after,
+        #rotor:checked ~ .front::after {
             opacity: 0;
             transition: opacity 1s, easeOutCubic;
             -webkit-transition: opacity 1s, easeOutCubic;
@@ -72,7 +73,8 @@
 
         }
 
-        .card:not(.flipped)::after {
+        #rotor:checked ~ .back::after,
+        #rotor:not(:checked) ~ .front::after {
             opacity: 1;
             transition: opacity 1s, easeInCubic;
             -webkit-transition: opacity 1s, easeInCubic;
@@ -101,77 +103,37 @@
             cursor: pointer;
             margin-right: 1em;
         }
+
+        input[type="checkbox"] {
+            border: none;
+            background: none;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
     </style>
 </head>
 <body>
-<div class="card front">
-    <div class="card-content">
-        <h1>Oleg Galaburda</h1>
-        <span class="about">
+<label for="rotor">
+    <input type="checkbox" id="rotor">
+    <div class="card front">
+        <div class="card-content">
+            <h1>Oleg Galaburda</h1>
+            <span class="about">
             Software Engineer
         </span>
+        </div>
     </div>
-</div>
-<div class="card back flipped">
-    <div class="card-content">
-        <h1>Oleg Galaburda</h1>
-        <span class="links">
+    <div class="card back">
+        <div class="card-content">
+            <h1>Oleg Galaburda</h1>
+            <span class="links">
             <a href="https://github.com/burdiuz">GitHub</a>
             <a href="https://www.linkedin.com/in/clickbait/">LinkedIn</a>
         </span>
+        </div>
     </div>
-</div>
+</label>
 </body>
-<script type="text/javascript">
-  const addClassName = (element, className) => {
-    element.className = `${element.className} ${className}`;
-  };
-
-  const removeClassName = (element, className) => {
-    element.className = element.className
-      .split(' ')
-      .filter(name => name !== className)
-      .join(' ');
-  };
-
-  const hasClassName = (element, className) =>
-    !!element.className.match(new RegExp(`(\\s|^)${className}(\\s|$)`));
-
-  const FLIPPED = 'flipped';
-
-  const getFront = () => document.querySelector('div.card.front');
-
-  const getBack = () => document.querySelector('div.card.back');
-
-  const isFrontVisible = () => !hasClassName(getFront(), FLIPPED);
-
-  const flipToFront = () => {
-    addClassName(getBack(), FLIPPED);
-    removeClassName(getFront(), FLIPPED);
-  };
-
-  const flipToBack = () => {
-    addClassName(getFront(), FLIPPED);
-    removeClassName(getBack(), FLIPPED);
-  };
-
-  const flipCard = () => {
-    if (isFrontVisible()) {
-      flipToBack();
-    } else {
-      flipToFront();
-    }
-  };
-
-  const handleFlipCard = (event) => {
-    if (event.target.nodeName.toLowerCase() !== 'a') {
-      event.preventDefault();
-      flipCard();
-    }
-  };
-
-  getFront().addEventListener('click', handleFlipCard);
-  getBack().addEventListener('click', handleFlipCard);
-</script>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </html>
